@@ -274,11 +274,3 @@ def sphericalEffector(baseName):
     connectJoint(baseName+'_FB_', FBRange, ctrl, 'Front','Back',  frontJnt, backJnt)
 
 
-    
-#baseName = 'LeftWrist'   
-#sphericalEffector(baseName)
-    
-    
-
-
-
