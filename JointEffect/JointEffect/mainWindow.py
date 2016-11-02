@@ -1,8 +1,17 @@
 # coding:utf-8
 
-from PySide import QtGui, QtCore
+try:
+    from PySide.QtGui import *
+    from PySide.QtCore import *
+    from shiboken import wrapInstance
+except:
+    from PySide2.QtGui import *
+    from PySide2.QtCore import *
+    from PySide2.QtWidgets import *
+    from shiboken2 import wrapInstance
+
+
 import maya.OpenMayaUI as OpenMayaUI
-from shiboken import wrapInstance
 import pymel.all as pm
 
 import jointEffector as Effector
@@ -12,7 +21,7 @@ __version__ = '1.0.0'
 
 def getMayaWindow():
     ptr = OpenMayaUI.MQtUtil.mainWindow()
-    return wrapInstance(long(ptr), QtGui.QMainWindow)
+    return wrapInstance(long(ptr), QMainWindow)
 
 def mayaToQtObject( inMayaUI ):
     ptr = OpenMayaUI.MQtUtil.findControl( inMayaUI )
@@ -21,9 +30,9 @@ def mayaToQtObject( inMayaUI ):
     if ptr is None:
         ptr= OpenMayaUI.MQtUtil.findMenuItem( inMayaUI )
     if ptr is not None:
-        return wrapInstance( long( ptr ), QtGui.QWidget )
+        return wrapInstance( long( ptr ), QWidget )
 
-class MainWindow(QtGui.QDialog):
+class MainWindow(QDialog):
     
     def __init__(self, parent=getMayaWindow()):
         super(MainWindow, self).__init__(parent)
@@ -33,14 +42,14 @@ class MainWindow(QtGui.QDialog):
         
     def initUI(self):
         self.setWindowTitle('Joint Effector')
-        self.mainLayoyt = QtGui.QVBoxLayout()
+        self.mainLayoyt = QVBoxLayout()
         self.setLayout(self.mainLayoyt)
         
         self.name         = BaseNameWidget()
         self.start        = SelectWidget('Start')
         self.mid          = SelectWidget('Middle')
         self.end          = SelectWidget('End')
-        self.installBtn = QtGui.QPushButton('Add Effector')
+        self.installBtn = QPushButton('Add Effector')
         
         self.mainLayoyt.addWidget(self.name)
         self.mainLayoyt.addWidget(self.start)
@@ -62,15 +71,15 @@ class MainWindow(QtGui.QDialog):
         Effector.hingeEffector(baseName, start, mid, end)
     
 
-class BaseNameWidget(QtGui.QWidget):
+class BaseNameWidget(QWidget):
     def __init__(self, parent=None):
         super(BaseNameWidget, self).__init__(parent)
         
-        layout = QtGui.QHBoxLayout()
-        label = QtGui.QLabel('Base Name:')
-        label.setAlignment(QtCore.Qt.AlignCenter)
+        layout = QHBoxLayout()
+        label = QLabel('Base Name:')
+        label.setAlignment(Qt.AlignCenter)
         label.setFixedWidth(105)
-        self.lineEdit = QtGui.QLineEdit('temp')
+        self.lineEdit = QLineEdit('temp')
         layout.addWidget(label)
         layout.addWidget(self.lineEdit)
         
@@ -81,14 +90,14 @@ class BaseNameWidget(QtGui.QWidget):
         return str(self.lineEdit.text())    
     
         
-class SelectWidget(QtGui.QWidget):
+class SelectWidget(QWidget):
     
     def __init__(self, btnLabel, parent=None):
         super(SelectWidget, self).__init__(parent)
         
-        layout = QtGui.QHBoxLayout()
-        self.lineEdit = QtGui.QLineEdit()
-        self.pushButton = QtGui.QPushButton(btnLabel)
+        layout = QHBoxLayout()
+        self.lineEdit = QLineEdit()
+        self.pushButton = QPushButton(btnLabel)
         
         layout.addWidget(self.pushButton)
         layout.addWidget(self.lineEdit)
